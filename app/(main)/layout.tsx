@@ -1,7 +1,11 @@
 import Footer from "@/components/footer";
 import Navbar from "@/components/navbar";
 
-export const MainLayout = ({ children }: { children: React.ReactNode }) => {
+export default function MainLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <div className="h-full dark:bg-[#1F1F1F] flex flex-col">
       <div className="flex-1">
@@ -11,6 +15,4 @@ export const MainLayout = ({ children }: { children: React.ReactNode }) => {
       </div>
     </div>
   );
-};
-
-export default MainLayout;
+}
