@@ -53,7 +53,7 @@ const components: { title: string; href: string; description: string }[] = [
   },
   {
     title: "Zakład pracy",
-    href: "/company",
+    href: "/salary",
     description:
       "Aplikacja daje możliwość wyświetlenia listy wszystkich pracowników zakładu. Lista musi zawierać: Id pracownika, jego imię i nazwisko, datę urodzenia oraz stanowisko. W zakładzie pracują urzędnicy oraz pracownicy fizyczni",
   },
@@ -89,13 +89,11 @@ export function NavbarMenu() {
           <NavigationMenuContent>
             <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
               {components.map((component) => (
-                <ListItem
-                  key={component.title}
-                  title={component.title}
-                  href={component.href}
-                >
-                  {component.description}
-                </ListItem>
+                <Link key={component.title} href={component.href}>
+                  <ListItem title={component.title}>
+                    {component.description}
+                  </ListItem>
+                </Link>
               ))}
             </ul>
           </NavigationMenuContent>

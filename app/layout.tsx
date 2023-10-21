@@ -4,8 +4,6 @@ import "./globals.css";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { ConvexClientProvider } from "@/components/providers/convex-provider";
-import Navbar from "@/components/navbar";
-import Footer from "@/components/footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -45,15 +43,7 @@ export default function RootLayout({
             storageKey="notatkihermana-theme"
           >
             <Toaster position="bottom-center" />
-            <div className="h-full dark:bg-[#1F1F1F] flex flex-col">
-              <div className="flex-1">
-                <Navbar />
-                <main className="pt-40 pb-20 dark:bg-[#1F1F1F]">
-                  {children}
-                </main>
-                <Footer />
-              </div>
-            </div>
+            {children}
           </ThemeProvider>
         </ConvexClientProvider>
       </body>

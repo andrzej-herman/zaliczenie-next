@@ -163,7 +163,7 @@ const Home = () => {
             <TopicCard
               icon={Building2}
               title="Zakład pracy"
-              link="/company"
+              link="/salary"
               content="Aplikacja daje możliwość wyświetlenia listy wszystkich pracowników zakładu. Lista musi zawierać: Id pracownika, jego imię i nazwisko, datę urodzenia oraz stanowisko. W zakładzie pracują urzędnicy oraz pracownicy fizyczni ...
 
               "

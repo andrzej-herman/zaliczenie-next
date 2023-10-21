@@ -12,6 +12,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import Link from "next/link";
+import { url } from "@/url";
 
 const products = [
   {
@@ -66,7 +67,7 @@ const products = [
   },
 ];
 
-const BankPage = () => {
+const CashDeskPage = () => {
   return (
     <div className="dark:bg-[#1F1F1F] flex flex-col">
       <div className="container mx-auto">
@@ -87,16 +88,16 @@ const BankPage = () => {
           </h3>
           <Separator />
           <div className="py-6">
-            <p>
+            <p className="text-lg text-justify tracking-tight">
               Symulator pokazuje dokładnie jak powinna wyglądać i działać
               aplikacja konsoli. Po otwarciu symulatora zobaczycie Państwo
               consolę oraz przycisk{" "}
               <span className="italic">Rozpocznij symulację programu</span>.
-              Odpowiednie opcje proszę wprowadzać w pole po prawej stronie
-              konsoli, które będzie się pojawiać w odpowiednim czasie.
+              Odpowiednie opcje proszę wprowadzać w wyznaczone pole, które
+              będzie się pojawiać w odpowiednim czasie.
             </p>
           </div>
-          <Link href="https://zaliczenie.aherman.pl/cashdesk" target="_blank">
+          <Link href={`${url}cashdesk`} target="_blank">
             <div
               className="group border rounded-sm w-full p-8 
             bg-neutral-100 hover:bg-neutral-200 
@@ -221,4 +222,4 @@ const BankPage = () => {
   );
 };
 
-export default BankPage;
+export default CashDeskPage;
