@@ -71,14 +71,14 @@ export function NavbarMenu() {
           </Link>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <Link href="#aplikacja" legacyBehavior passHref scroll>
+          <Link href="/#aplikacja" legacyBehavior passHref scroll>
             <NavigationMenuLink className={navigationMenuTriggerStyle()}>
               Stworzenie aplikacji
             </NavigationMenuLink>
           </Link>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <Link href="#kolokwium" legacyBehavior passHref scroll>
+          <Link href="/#kolokwium" legacyBehavior passHref scroll>
             <NavigationMenuLink className={navigationMenuTriggerStyle()}>
               Kolokwium
             </NavigationMenuLink>

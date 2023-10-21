@@ -67,11 +67,30 @@ const BankPage = () => {
           </h3>
           <Separator />
           <div className="py-6">
-            <Link href="https://zaliczenie.aherman.pl/bank" target="_blank">
-              <Play />
-              Otwórz symulator aplikacji Bank
-            </Link>
+            <p>
+              Symulator pokazuje dokładnie jak powinna wyglądać i działać
+              aplikacja konsoli. Po otwarciu symulatora zobaczycie Państwo
+              consolę oraz przycisk{" "}
+              <span className="italic">Rozpocznij symulację programu</span>.
+              Odpowiednie opcje proszę wprowadzać w pole po prawej stronie
+              konsoli, które będzie się pojawiać w odpowiednim czasie.
+            </p>
           </div>
+          <Link href="https://zaliczenie.aherman.pl/bank" target="_blank">
+            <div
+              className="group border rounded-sm w-full p-8 
+            bg-neutral-100 hover:bg-neutral-200 
+            dark:bg-[#191919] dark:hover:bg-[#101010]
+            transition duration-300"
+            >
+              <div className="flex flex-col space-y-3 items-center justify-center">
+                <Play className="w-12 h-12 text-neutral-900 dark:text-white group-hover:text-emerald-500 transition ease-in-out duration-300" />
+                <p className="font-medium text-xl tracking-tight text-center">
+                  Otwórz symulator aplikacji Bank
+                </p>
+              </div>
+            </div>
+          </Link>
         </section>
         <section className="pt-16">
           <h3 className="text-2xl font-medium pb-2 tracking-tight">

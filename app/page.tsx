@@ -200,7 +200,8 @@ const Home = () => {
             Kolokwium zawiera trzy pytania opisowe które zostaną losowo wybrane
             z listy 20 pytań. Za każde z trzech pytań można uzyskać maksymalnie
             5 punktów (łącznie max: 15pkt.). Poniżej znajdują się kryteria oceny
-            oraz plik PDF zawierający zestaw wszystkich 20 pytań:
+            oraz plik PDF zawierający zestaw wszystkich 20 pytań (aby go pobrać
+            należy się zalogować):
           </p>
           <div className="pt-6 md:flex md:items-center md:justify-between md:gap-4">
             <ul>
@@ -244,11 +245,13 @@ const Home = () => {
                 </p>
               </CardContent>
               <CardFooter className="flex justify-end">
-                <Button size="sm">
-                  <Link href="/Pytania_do_kolokwium.pdf" target="_blank">
-                    Pobierz plik
-                  </Link>
-                </Button>
+                {isAuthenticated && !isLoading && (
+                  <Button size="sm">
+                    <Link href="/Pytania_do_kolokwium.pdf" target="_blank">
+                      Pobierz plik
+                    </Link>
+                  </Button>
+                )}
               </CardFooter>
             </Card>
           </div>
