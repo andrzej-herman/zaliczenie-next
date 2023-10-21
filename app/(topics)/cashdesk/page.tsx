@@ -79,7 +79,8 @@ const CashDeskPage = () => {
             </h1>
           </div>
           <h6 className="tracking-tight text-muted-foreground mt-1">
-            (Temat nr 3)
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Temat
+            nr 3)
           </h6>
         </section>
         <section className="pt-16">
@@ -198,7 +199,6 @@ const CashDeskPage = () => {
             produktów dostępnych w sklepie:
           </p>
           <Table>
-            <TableCaption>Lista produktów w sklepie</TableCaption>
             <TableHeader>
               <TableRow>
                 <TableHead className="w-[200px]">Kod kreskowy</TableHead>

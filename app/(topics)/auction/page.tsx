@@ -53,6 +53,29 @@ const subjects = [
   },
 ];
 
+const cards = [
+  {
+    name: "Visa",
+    number: "0001",
+    saldo: "100 PLN",
+  },
+  {
+    name: "Mastercard",
+    number: "0002",
+    saldo: "10000 PLN",
+  },
+  {
+    name: "American Express",
+    number: "0003",
+    saldo: "3000 PLN",
+  },
+  {
+    name: "Diners Club",
+    number: "0004",
+    saldo: "1000 PLN",
+  },
+];
+
 const AuctionPage = () => {
   return (
     <div className="dark:bg-[#1F1F1F] flex flex-col">
@@ -65,7 +88,8 @@ const AuctionPage = () => {
             </h1>
           </div>
           <h6 className="tracking-tight text-muted-foreground mt-1">
-            (Temat nr 4)
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Temat
+            nr 4)
           </h6>
         </section>
         <section className="pt-16">
@@ -166,8 +190,8 @@ const AuctionPage = () => {
             Na początku ładujemy do pamięci listę wszystkich sześciu aktualnie
             wystawionych ofert oraz listę czterech kart kredytowych.
           </p>
+          <p className="text-lg font-semibold pt-2">Lista przedmiotów aktualnie na aukcji</p>
           <Table>
-            <TableCaption>Lista przedmiotów aktualnie na aukcji</TableCaption>
             <TableHeader>
               <TableRow>
                 <TableHead className="w-[400px]">Nazwa</TableHead>
@@ -190,25 +214,21 @@ const AuctionPage = () => {
             </TableBody>
           </Table>
           <div className="pt-8">
+            <p className="text-lg font-semibold">Lista kart kredytowych</p>
             <Table>
-              <TableCaption>Lista kart kredytowych</TableCaption>
               <TableHeader>
                 <TableRow>
                   <TableHead className="w-[400px]">Nazwa</TableHead>
-                  <TableHead>Kategoria</TableHead>
-                  <TableHead>Czy wyróżniony</TableHead>
-                  <TableHead className="text-right">Cena</TableHead>
+                  <TableHead>Numer karty</TableHead>
+                  <TableHead className="text-right">Dostępny limit</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {subjects.map((s) => (
-                  <TableRow key={s.name}>
-                    <TableCell className="font-medium">{s.name}</TableCell>
-                    <TableCell>{s.category}</TableCell>
-                    <TableCell>
-                      {s.isBold ? <BadgeCheck /> : <BadgeMinus />}
-                    </TableCell>
-                    <TableCell className="text-right">{s.price}</TableCell>
+                {cards.map((c) => (
+                  <TableRow key={c.name}>
+                    <TableCell className="font-medium">{c.name}</TableCell>
+                    <TableCell>{c.number}</TableCell>
+                    <TableCell className="text-right">{c.saldo}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

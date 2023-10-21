@@ -103,8 +103,8 @@ const Home = () => {
           <p className="pt-5 text-lg tracking-tight text-justify">
             Podstawą zaliczenia jest napisanie aplikacji z wykorzystaniem
             jednego z obiektowych języków programowania (C#, C++, Python, Java,
-            Javascript, PHP, Go, Ruby). Kod aplikacji piszemy w zespołach
-            dwuosobowych (należy zgłosić do mnie skład zespołu do dnia 28
+            Javascript, PHP, Go, Ruby). Kod aplikacji piszemy w zespołach dwu,
+            trzyosobowych (należy zgłosić do mnie skład zespołu do dnia 28
             stycznia 2024 roku), lub samodzielnie. Forma programu jest dowolna
             (aplikacja konsoli, aplikacja typu desktop, aplikacja webowa).
             Jedyną dopuszczalną formą dostarczenia kodu źródłowego programu jest

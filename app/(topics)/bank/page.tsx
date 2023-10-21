@@ -59,7 +59,8 @@ const BankPage = () => {
             </h1>
           </div>
           <h6 className="tracking-tight text-muted-foreground mt-1">
-            (Temat nr 1)
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Temat
+            nr 1)
           </h6>
         </section>
         <section className="pt-16">
@@ -153,7 +154,6 @@ const BankPage = () => {
             Na początku ładujemy do pamięci listę wszystkich Klientów banku:
           </p>
           <Table>
-            <TableCaption>Lista klientów banku</TableCaption>
             <TableHeader>
               <TableRow>
                 <TableHead className="w-[100px]">Id</TableHead>
