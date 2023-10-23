@@ -384,6 +384,7 @@ const Home = () => {
                     <Button onClick={sendData} className="mt-3">
                       Zapisz swój wybór
                     </Button>
+                    
                   </DialogFooter>
                 </DialogContent>
               </Dialog> */}
