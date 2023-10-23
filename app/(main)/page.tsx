@@ -1,8 +1,9 @@
 "use client";
+
 import TopicCard from "@/components/topic-card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { SignUpButton } from "@clerk/nextjs";
+import { SignUpButton, useUser } from "@clerk/nextjs";
 import {
   Coins,
   Landmark,
@@ -12,6 +13,7 @@ import {
   Car,
   Building2,
   FileText,
+  FileQuestion,
 } from "lucide-react";
 import Link from "next/link";
 import {
@@ -23,9 +25,147 @@ import {
 } from "@/components/ui/card";
 import { useConvexAuth } from "convex/react";
 import Spinner from "@/components/spinner";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { useToast } from "@/components/ui/use-toast";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { useState } from "react";
+
+import { cn } from "@/lib/utils";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Check, ChevronsUpDown } from "lucide-react";
+import React from "react";
+
+const availableGroups = [
+  {
+    value: "1",
+    label: "Grupa 1",
+  },
+  {
+    value: "2",
+    label: "Grupa 2",
+  },
+  {
+    value: "3",
+    label: "Grupa 3",
+  },
+  {
+    value: "4",
+    label: "Grupa 4",
+  },
+  {
+    value: "5",
+    label: "Grupa 5",
+  },
+  {
+    value: "7",
+    label: "Grupa 7",
+  },
+];
+
+const topics = [
+  {
+    value: "1",
+    label: "Bank",
+  },
+  {
+    value: "2",
+    label: "Biuro podróży",
+  },
+  {
+    value: "3",
+    label: "Kasa sklepowa",
+  },
+  {
+    value: "4",
+    label: "Portal aukcyjny",
+  },
+  {
+    value: "5",
+    label: "Taxi",
+  },
+  {
+    value: "6",
+    label: "Wypożyczalnia samochodów",
+  },
+  {
+    value: "7",
+    label: "Zakład pracy",
+  },
+  {
+    value: "8",
+    label: "Zgadnij liczbę",
+  },
+];
 
 const Home = () => {
   const { isAuthenticated, isLoading } = useConvexAuth();
+  const { user } = useUser();
+  const { toast } = useToast();
+  const [openGroup, setOpenGroup] = React.useState(false);
+  const [openTopic, setOpenTopic] = React.useState(false);
+  const [topicVisible, setTopicVisible] = React.useState(false);
+
+  const [albumNumber, setAlbumNumber] = useState("");
+  const [groupNumber, setGroupNumber] = useState<string>("");
+  const [selectedForm, setSelectedForm] = useState<string>("");
+  const [topic, setTopic] = useState<string>("");
+
+  const sendData = () => {
+    // here
+
+    var data = {
+      userId: user?.id,
+      firstName: user?.firstName,
+      lastName: user?.lastName,
+      album: albumNumber,
+    };
+  };
+
+  const handleAlbumNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setAlbumNumber(e.target.value);
+  };
+
+  const handleSelectedForm = (value: string) => {
+    setSelectedForm(value);
+    if (value === "2") setTopicVisible(true);
+    else setTopicVisible(false);
+  };
+
+  const getUserInput = (): string => {
+    if (user !== null) {
+      if (user !== undefined) {
+        if (user.fullName !== null) {
+          return user.fullName;
+        } else {
+          return "-";
+        }
+      } else return "-";
+    } else return "-";
+  };
+
+  console.log(groupNumber);
+  console.log(selectedForm);
 
   return (
     <div className="dark:bg-[#1F1F1F] flex flex-col">
@@ -56,12 +196,208 @@ const Home = () => {
           )}
 
           {isAuthenticated && !isLoading && (
-            <Button
-              size="lg"
-              className="py-8 md:py-0 text-base md:text-lg tracking-tight"
-            >
-              Wybierz formę zaliczenia
-            </Button>
+            <div className="flex items-center justify-center gap-4">
+              {/* <Dialog>
+                <DialogTrigger asChild>
+                  <Button
+                    size="lg"
+                    className="py-8 md:py-0 text-base md:text-lg tracking-tight"
+                  >
+                    Wybierz formę zaliczenia
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[650px]">
+                  <DialogHeader>
+                    <DialogTitle>Wybierz formę zaliczenia</DialogTitle>
+                    <DialogDescription>
+                      Uzupełnij wymagane dane aby wybrać formę zaliczenia
+                      przedmiotu
+                    </DialogDescription>
+                  </DialogHeader>
+
+                  <div className="flex flex-col space-y-4 px-2">
+                    <div className="flex items-center justify-between gap-5 pt-2">
+                      <div className="w-full">
+                        <Label htmlFor="fullName" className="mb-2">
+                          Imię i nazwisko
+                        </Label>
+                        <Input
+                          id="fullName"
+                          defaultValue={getUserInput()}
+                          disabled
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between gap-6 pt-2">
+                      <div className="w-full">
+                        <Label htmlFor="fullName" className="mb-2">
+                          Nr albumu SAN
+                        </Label>
+                        <Input
+                          id="albumNumber"
+                          value={albumNumber}
+                          onChange={handleAlbumNumber}
+                        />
+                      </div>
+                      <div className="w-full">
+                        <Label htmlFor="groupNumber" className="mb-2">
+                          Nr grupy studenckiej
+                        </Label>
+                        <Popover open={openGroup} onOpenChange={setOpenGroup}>
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant="outline"
+                              role="combobox"
+                              aria-expanded={openGroup}
+                              className="w-full justify-between"
+                            >
+                              {groupNumber
+                                ? availableGroups.find(
+                                    (framework) =>
+                                      framework.value === groupNumber
+                                  )?.label
+                                : "Wybierz grupę studencką..."}
+                              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-full p-0">
+                            <Command>
+                              <CommandInput placeholder="Wybierz grupę studencką..." />
+                              <CommandEmpty>Nie znaleziono grupy</CommandEmpty>
+                              <CommandGroup>
+                                {availableGroups.map((framework) => (
+                                  <CommandItem
+                                    key={framework.value}
+                                    value={framework.value}
+                                    onSelect={(currentValue: string) => {
+                                      setGroupNumber(
+                                        currentValue === groupNumber
+                                          ? ""
+                                          : currentValue
+                                      );
+                                      setOpenGroup(false);
+                                    }}
+                                  >
+                                    <Check
+                                      className={cn(
+                                        "mr-2 h-4 w-4",
+                                        groupNumber === framework.value
+                                          ? "opacity-100"
+                                          : "opacity-0"
+                                      )}
+                                    />
+                                    {framework.label}
+                                  </CommandItem>
+                                ))}
+                              </CommandGroup>
+                            </Command>
+                          </PopoverContent>
+                        </Popover>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between gap-5 pt-2">
+                      <div className="w-full">
+                        <Label>Forma zaliczenia przedmiotu</Label>
+                        <RadioGroup
+                          value={selectedForm}
+                          className="mt-4"
+                          onValueChange={handleSelectedForm}
+                        >
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="1" id="r1" />
+                            <Label htmlFor="r1">Kolokwium</Label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="2" id="r2" />
+                            <Label htmlFor="r2">Aplikacja</Label>
+                          </div>
+                        </RadioGroup>
+                      </div>
+                    </div>
+                    {topicVisible && (
+                      <>
+                        <div className="flex items-center justify-between gap-5 pt-2">
+                          <div className="w-full">
+                            <Label>Temat aplikacji</Label>
+                            <Popover
+                              open={openTopic}
+                              onOpenChange={setOpenTopic}
+                            >
+                              <PopoverTrigger asChild>
+                                <Button
+                                  variant="outline"
+                                  role="combobox"
+                                  aria-expanded={openTopic}
+                                  className="w-full justify-between"
+                                >
+                                  {topic
+                                    ? topics.find(
+                                        (framework) => framework.value === topic
+                                      )?.label
+                                    : "Wybierz temat aplikacji..."}
+                                  <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                </Button>
+                              </PopoverTrigger>
+                              <PopoverContent className="w-full p-0">
+                                <Command>
+                                  <CommandInput placeholder="Wybierz temat aplikacji..." />
+                                  <CommandEmpty>
+                                    Nie znaleziono tematu
+                                  </CommandEmpty>
+                                  <CommandGroup>
+                                    {topics.map((framework) => (
+                                      <CommandItem
+                                        key={framework.value}
+                                        value={framework.value}
+                                        onSelect={(currentValue: string) => {
+                                          setTopic(
+                                            currentValue === topic
+                                              ? ""
+                                              : currentValue
+                                          );
+                                          setOpenTopic(false);
+                                        }}
+                                      >
+                                        <Check
+                                          className={cn(
+                                            "mr-2 h-4 w-4",
+                                            topic === framework.value
+                                              ? "opacity-100"
+                                              : "opacity-0"
+                                          )}
+                                        />
+                                        {framework.label}
+                                      </CommandItem>
+                                    ))}
+                                  </CommandGroup>
+                                </Command>
+                              </PopoverContent>
+                            </Popover>
+                          </div>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                  <DialogFooter>
+                    <Button onClick={sendData} className="mt-3">
+                      Zapisz swój wybór
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog> */}
+
+              <Link href="peoplelist">
+                <Button
+                  size="lg"
+                  variant="secondary"
+                  className="py-8 md:py-0 text-base md:text-lg tracking-tight"
+                >
+                  Zobacz listę zapisanych studentów
+                </Button>
+              </Link>
+            </div>
           )}
         </section>
         <Separator />
@@ -118,7 +454,7 @@ const Home = () => {
             <span className="font-bold">20 lutego 2024 roku. </span>
           </p>
           <p className="pt-3 text-lg tracking-tight text-justify">
-            Do wyboru jest 7 tematów aplikacji. W jednej grupie studenckiej
+            Do wyboru jest 8 tematów aplikacji. W jednej grupie studenckiej
             każdy zespół wybiera inny temat programu. Nie przyjmuję innych
             programów !!! Poniżej znajdziecie Państwo tematy aplikacji należy
             się zalogowac aby zobaczyć szczegóły:
@@ -165,7 +501,13 @@ const Home = () => {
               title="Zakład pracy"
               link="/salary"
               content="Aplikacja daje możliwość wyświetlenia listy wszystkich pracowników zakładu. Lista musi zawierać: Id pracownika, jego imię i nazwisko, datę urodzenia oraz stanowisko. W zakładzie pracują urzędnicy oraz pracownicy fizyczni ...
-
+              "
+            />
+            <TopicCard
+              icon={FileQuestion}
+              title="Zgadnij liczbę"
+              link="/guessnumber"
+              content="Aplikacja, to prosta gra polegająca na odgadnięciu sekretnej liczby. Gracz wybiera poziom trudności gry, a następnie próbuje odgadnąć liczbę losowo wygenerowaną przez komputer. W każdym poziomie trudności jest określona liczba prób ...
               "
             />
           </div>
