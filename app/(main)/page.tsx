@@ -134,13 +134,12 @@ const Home = () => {
   const sendData = () => {
     // todo validate
     var data = {
-      userId: user?.id,
       firstName: user?.firstName,
       lastName: user?.lastName,
       album: albumNumber,
       studentGroupNumber: parseInt(groupNumber),
       formType: selectedForm,
-      topic: topic
+      topic: topic.length === 0 ? null : topic,
     };
 
     toast({
