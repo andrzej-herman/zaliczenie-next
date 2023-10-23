@@ -8,10 +8,10 @@ export default defineSchema({
     lastName: v.string(),
     album: v.string(),
     studentGroupNumber: v.number(),
-    formType: v.number(),
-    topicNumber: v.optional(v.number()),
+    formType: v.string(),
+    topic: v.optional(v.string()),
   })
     .index("by_user", ["userId"])
     .index("by_formtype", ["formType"])
-    .index("by_topicnumber", ["topicNumber"]),
+    .index("by_topicnumber", ["topic"]),
 });

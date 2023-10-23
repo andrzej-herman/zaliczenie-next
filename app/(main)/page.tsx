@@ -85,35 +85,35 @@ const availableGroups = [
 
 const topics = [
   {
-    value: "1",
+    value: "Bank",
     label: "Bank",
   },
   {
-    value: "2",
+    value: "Biuro podróży",
     label: "Biuro podróży",
   },
   {
-    value: "3",
+    value: "Kasa sklepowa",
     label: "Kasa sklepowa",
   },
   {
-    value: "4",
+    value: "Portal aukcyjny",
     label: "Portal aukcyjny",
   },
   {
-    value: "5",
+    value: "Taxi",
     label: "Taxi",
   },
   {
-    value: "6",
+    value: "Wypożyczalnia samochodów",
     label: "Wypożyczalnia samochodów",
   },
   {
-    value: "7",
+    value: "Zakład pracy",
     label: "Zakład pracy",
   },
   {
-    value: "8",
+    value: "Zgadnij liczbę",
     label: "Zgadnij liczbę",
   },
 ];
@@ -132,14 +132,26 @@ const Home = () => {
   const [topic, setTopic] = useState<string>("");
 
   const sendData = () => {
-    // here
-
+    // todo validate
     var data = {
       userId: user?.id,
       firstName: user?.firstName,
       lastName: user?.lastName,
       album: albumNumber,
+      studentGroupNumber: parseInt(groupNumber),
+      formType: selectedForm,
+      topic: topic
     };
+
+    toast({
+      title: "You submitted the following values:",
+      description: (
+        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
+        </pre>
+      ),
+    })
+
   };
 
   const handleAlbumNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -148,7 +160,7 @@ const Home = () => {
 
   const handleSelectedForm = (value: string) => {
     setSelectedForm(value);
-    if (value === "2") setTopicVisible(true);
+    if (value === "Aplikacja") setTopicVisible(true);
     else setTopicVisible(false);
   };
 
@@ -197,7 +209,7 @@ const Home = () => {
 
           {isAuthenticated && !isLoading && (
             <div className="flex items-center justify-center gap-4">
-              {/* <Dialog>
+              <Dialog>
                 <DialogTrigger asChild>
                   <Button
                     size="lg"
@@ -306,11 +318,11 @@ const Home = () => {
                           onValueChange={handleSelectedForm}
                         >
                           <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="1" id="r1" />
+                            <RadioGroupItem value="Kolokwium" id="r1" />
                             <Label htmlFor="r1">Kolokwium</Label>
                           </div>
                           <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="2" id="r2" />
+                            <RadioGroupItem value="Aplikacja" id="r2" />
                             <Label htmlFor="r2">Aplikacja</Label>
                           </div>
                         </RadioGroup>
@@ -387,9 +399,9 @@ const Home = () => {
                     
                   </DialogFooter>
                 </DialogContent>
-              </Dialog> */}
+              </Dialog>
 
-              {/* <Link href="peoplelist">
+              <Link href="peoplelist">
                 <Button
                   size="lg"
                   variant="secondary"
@@ -397,7 +409,7 @@ const Home = () => {
                 >
                   Zobacz listę zapisanych studentów
                 </Button>
-              </Link> */}
+              </Link>
             </div>
           )}
         </section>
