@@ -388,7 +388,7 @@ const Home = () => {
                 </DialogContent>
               </Dialog> */}
 
-              <Link href="peoplelist">
+              {/* <Link href="peoplelist">
                 <Button
                   size="lg"
                   variant="secondary"
@@ -396,7 +396,7 @@ const Home = () => {
                 >
                   Zobacz listę zapisanych studentów
                 </Button>
-              </Link>
+              </Link> */}
             </div>
           )}
         </section>
