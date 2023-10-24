@@ -58,7 +58,7 @@ const components: { title: string; href: string; description: string }[] = [
       "Aplikacja daje możliwość wyświetlenia listy wszystkich pracowników zakładu. Lista musi zawierać: Id pracownika, jego imię i nazwisko, datę urodzenia oraz stanowisko. W zakładzie pracują urzędnicy oraz pracownicy fizyczni",
   },
   {
-    title: "Zgadnij liczbę",
+    title: "Sekretna liczba",
     href: "/guessnumber",
     description:
       "Aplikacja, to prosta gra polegająca na odgadnięciu sekretnej liczby. Gracz wybiera poziom trudności gry, a następnie próbuje odgadnąć liczbę losowo wygenerowaną przez komputer. W każdym poziomie trudności jest określona liczba prób",
