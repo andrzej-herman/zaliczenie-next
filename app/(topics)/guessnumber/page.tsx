@@ -40,7 +40,7 @@ const BankPage = () => {
           <div className="flex flex-start items-center gap-2">
             <FileQuestion className="w-10 h-10" />
             <h1 className="font-bold text-3xl md:text-5xl text-neutral-800 dark:text-white tracking-tight">
-              Zgadnij liczbę
+              Sekretna liczba
             </h1>
           </div>
           <h6 className="tracking-tight text-muted-foreground mt-1">
@@ -73,7 +73,7 @@ const BankPage = () => {
               <div className="flex flex-col space-y-3 items-center justify-center">
                 <Play className="w-12 h-12 text-neutral-900 dark:text-white group-hover:text-emerald-500 transition ease-in-out duration-300" />
                 <p className="font-medium text-xl tracking-tight text-center">
-                  Otwórz symulator aplikacji Zgadnij liczbę
+                  Otwórz symulator aplikacji Sekretna liczba
                 </p>
               </div>
             </div>

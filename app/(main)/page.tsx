@@ -14,6 +14,8 @@ import {
   Building2,
   FileText,
   FileQuestion,
+  AlertCircle,
+  Info,
 } from "lucide-react";
 import Link from "next/link";
 import {
@@ -23,10 +25,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useConvexAuth } from "convex/react";
+import { useConvexAuth, useMutation, useQuery } from "convex/react";
 import Spinner from "@/components/spinner";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -55,6 +58,9 @@ import {
 } from "@/components/ui/popover";
 import { Check, ChevronsUpDown } from "lucide-react";
 import React from "react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { isEmptyOrSpaces } from "@/helpers";
+import { api } from "@/convex/_generated/api";
 
 const availableGroups = [
   {
@@ -83,38 +89,38 @@ const availableGroups = [
   },
 ];
 
-const topics = [
+const availableTopics = [
   {
-    value: "Bank",
+    value: "1",
     label: "Bank",
   },
   {
-    value: "Biuro podróży",
+    value: "2",
     label: "Biuro podróży",
   },
   {
-    value: "Kasa sklepowa",
+    value: "3",
     label: "Kasa sklepowa",
   },
   {
-    value: "Portal aukcyjny",
+    value: "4",
     label: "Portal aukcyjny",
   },
   {
-    value: "Taxi",
+    value: "5",
     label: "Taxi",
   },
   {
-    value: "Wypożyczalnia samochodów",
-    label: "Wypożyczalnia samochodów",
+    value: "6",
+    label: "Wypożyczalnia",
   },
   {
-    value: "Zakład pracy",
+    value: "7",
     label: "Zakład pracy",
   },
   {
-    value: "Zgadnij liczbę",
-    label: "Zgadnij liczbę",
+    value: "8",
+    label: "Sekretna liczba",
   },
 ];
 
@@ -125,42 +131,118 @@ const Home = () => {
   const [openGroup, setOpenGroup] = React.useState(false);
   const [openTopic, setOpenTopic] = React.useState(false);
   const [topicVisible, setTopicVisible] = React.useState(false);
+  const [className, setClassName] = React.useState("w-full hidden");
 
   const [albumNumber, setAlbumNumber] = useState("");
-  const [groupNumber, setGroupNumber] = useState<string>("");
-  const [selectedForm, setSelectedForm] = useState<string>("");
-  const [topic, setTopic] = useState<string>("");
+  const [groupNumber, setGroupNumber] = useState("");
+  const [selectedForm, setSelectedForm] = useState("");
+  const [selectedTopic, setSelectedTopic] = useState("");
 
-  const sendData = () => {
-    // todo validate
+  const [validationError, setValidationError] = useState<string | null>(null);
+
+  const create = useMutation(api.sanusers.create);
+  const checkApply = useQuery(api.sanusers.canUserApply, { userId: user?.id });
+
+  const sendData = async () => {
+    if (isEmptyOrSpaces(albumNumber)) {
+      setValidationError("Proszę wpisać numer albumu studenta");
+      return;
+    }
+
+    if (isEmptyOrSpaces(groupNumber)) {
+      setValidationError("Proszę wybrać numer grupy studenckiej");
+      return;
+    }
+
+    if (isEmptyOrSpaces(selectedForm)) {
+      setValidationError("Proszę wybrać formę zaliczenia przedmiotu");
+      return;
+    }
+
+    if (selectedForm === "Aplikacja") {
+      if (isEmptyOrSpaces(selectedTopic)) {
+        setValidationError("Proszę wybrać temat aplikacji");
+        return;
+      }
+    }
+
     var data = {
-      firstName: user?.firstName,
-      lastName: user?.lastName,
+      firstName: getUserFirstName(),
+      lastName: getUserLastName(),
       album: albumNumber,
       studentGroupNumber: parseInt(groupNumber),
       formType: selectedForm,
-      topic: topic.length === 0 ? null : topic,
+      topic: availableTopics.find((t) => t.value === selectedTopic)?.label,
     };
 
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    })
+    const promise = await create({
+      firstName: data.firstName,
+      lastName: data.lastName,
+      album: data.album,
+      studentGroupNumber: data.studentGroupNumber,
+      formType: data.formType,
+      topic: data.topic,
+    });
 
+    if (promise.success) {
+      if (data.formType == "Kolokwium") {
+        toast({
+          title: "Wybrałeś Kolokwium jako formę zaliczenia",
+          description: (
+            <div className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+              <p className="text-white">Dziękuję za wybór</p>
+            </div>
+          ),
+        });
+      } else {
+        toast({
+          title: "Wybrałeś Stworzenie aplikacji jako formę zaliczenia",
+          description: (
+            <div className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+              <p className="text-white">{`Wybrany temat: ${data.topic}`}</p>
+              <p className="text-white">Dziękuję za wybór</p>
+            </div>
+          ),
+        });
+      }
+    } else {
+      toast({
+        title: "Nie można wybrać tematu",
+        description: (
+          <div className="mt-2 w-[340px] rounded-md bg-red-600 p-4">
+            <p className="text-white">{promise.error}</p>
+          </div>
+        ),
+      });
+    }
   };
 
   const handleAlbumNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAlbumNumber(e.target.value);
+    setValidationError(null);
+  };
+
+  const handleGroupNumber = (value: string) => {
+    setGroupNumber(value === groupNumber ? "" : value);
+    setValidationError(null);
+    setClassName("w-full");
+  };
+
+  const handleApplicationTopic = (value: string) => {
+    setSelectedTopic(value === selectedTopic ? "" : value);
+    setValidationError(null);
   };
 
   const handleSelectedForm = (value: string) => {
+    setValidationError(null);
     setSelectedForm(value);
-    if (value === "Aplikacja") setTopicVisible(true);
-    else setTopicVisible(false);
+    if (value === "Aplikacja") {
+      setTopicVisible(true);
+      setSelectedTopic("");
+    } else {
+      setTopicVisible(false);
+      setSelectedTopic("");
+    }
   };
 
   const getUserInput = (): string => {
@@ -175,8 +257,43 @@ const Home = () => {
     } else return "-";
   };
 
-  console.log(groupNumber);
-  console.log(selectedForm);
+  const getUserFirstName = (): string => {
+    if (user !== null) {
+      if (user !== undefined) {
+        if (user.firstName !== null) {
+          return user.firstName;
+        } else {
+          return "-";
+        }
+      } else return "-";
+    } else return "-";
+  };
+
+  const getUserLastName = (): string => {
+    if (user !== null) {
+      if (user !== undefined) {
+        if (user.lastName !== null) {
+          return user.lastName;
+        } else {
+          return "-";
+        }
+      } else return "-";
+    } else return "-";
+  };
+
+  const canSaveChoice = () => {
+    if (selectedForm.length > 0) {
+      if (selectedForm === "Kolokwium") {
+        return !isEmptyOrSpaces(albumNumber) && !isEmptyOrSpaces(groupNumber);
+      } else {
+        return (
+          !isEmptyOrSpaces(albumNumber) &&
+          !isEmptyOrSpaces(groupNumber) &&
+          !isEmptyOrSpaces(selectedTopic)
+        );
+      }
+    } else return false;
+  };
 
   return (
     <div className="dark:bg-[#1F1F1F] flex flex-col">
@@ -206,13 +323,13 @@ const Home = () => {
             </SignUpButton>
           )}
 
-          {isAuthenticated && !isLoading && (
+          {isAuthenticated && !isLoading && checkApply && (
             <div className="flex items-center justify-center gap-4">
               <Dialog>
                 <DialogTrigger asChild>
                   <Button
                     size="lg"
-                    className="py-8 md:py-0 text-base md:text-lg tracking-tight"
+                    className="py-8 md:py-0 text-base md:text-lg tracking-tight min-w-[340px]"
                   >
                     Wybierz formę zaliczenia
                   </Button>
@@ -226,7 +343,22 @@ const Home = () => {
                     </DialogDescription>
                   </DialogHeader>
 
-                  <div className="flex flex-col space-y-4 px-2">
+                  <Alert className="mt-2" variant="success">
+                    <Info className="h-4 w-4" />
+                    <AlertTitle>UWAGA!</AlertTitle>
+                    <AlertDescription className="tracking-tight">
+                      Każdy student, który zdecydował się na Stworzenie
+                      aplikacji jako formę zaliczenia, musi tutaj wybrać
+                      odpowiedni temat. Proszę najpierw sprawdzić, czy temat nie
+                      jest już zajęty przez osobę z innego zespołu w tej samej
+                      grupie studenckiej. System sprawdza, czy w jednej grupie
+                      studenckiej dany temat pojawił się trzy razy. Wówczas nie
+                      jest on już dostępny do wyboru. <br />
+                      Student, który zdecydował się na Kolokwium jako formę
+                      zaliczenia, musi tutaj wybrać opcję Kolokwium.
+                    </AlertDescription>
+                  </Alert>
+                  <div className="flex flex-col space-y-2 px-2">
                     <div className="flex items-center justify-between gap-5 pt-2">
                       <div className="w-full">
                         <Label htmlFor="fullName" className="mb-2">
@@ -265,8 +397,7 @@ const Home = () => {
                             >
                               {groupNumber
                                 ? availableGroups.find(
-                                    (framework) =>
-                                      framework.value === groupNumber
+                                    (g) => g.value === groupNumber
                                   )?.label
                                 : "Wybierz grupę studencką..."}
                               <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -277,28 +408,24 @@ const Home = () => {
                               <CommandInput placeholder="Wybierz grupę studencką..." />
                               <CommandEmpty>Nie znaleziono grupy</CommandEmpty>
                               <CommandGroup>
-                                {availableGroups.map((framework) => (
+                                {availableGroups.map((g) => (
                                   <CommandItem
-                                    key={framework.value}
-                                    value={framework.value}
+                                    key={g.value}
+                                    value={g.value}
                                     onSelect={(currentValue: string) => {
-                                      setGroupNumber(
-                                        currentValue === groupNumber
-                                          ? ""
-                                          : currentValue
-                                      );
+                                      handleGroupNumber(currentValue);
                                       setOpenGroup(false);
                                     }}
                                   >
                                     <Check
                                       className={cn(
                                         "mr-2 h-4 w-4",
-                                        groupNumber === framework.value
+                                        groupNumber === g.value
                                           ? "opacity-100"
                                           : "opacity-0"
                                       )}
                                     />
-                                    {framework.label}
+                                    {g.label}
                                   </CommandItem>
                                 ))}
                               </CommandGroup>
@@ -309,7 +436,7 @@ const Home = () => {
                     </div>
 
                     <div className="flex items-center justify-between gap-5 pt-2">
-                      <div className="w-full">
+                      <div className={className}>
                         <Label>Forma zaliczenia przedmiotu</Label>
                         <RadioGroup
                           value={selectedForm}
@@ -343,9 +470,9 @@ const Home = () => {
                                   aria-expanded={openTopic}
                                   className="w-full justify-between"
                                 >
-                                  {topic
-                                    ? topics.find(
-                                        (framework) => framework.value === topic
+                                  {selectedTopic
+                                    ? availableTopics.find(
+                                        (to) => to.value === selectedTopic
                                       )?.label
                                     : "Wybierz temat aplikacji..."}
                                   <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -358,28 +485,24 @@ const Home = () => {
                                     Nie znaleziono tematu
                                   </CommandEmpty>
                                   <CommandGroup>
-                                    {topics.map((framework) => (
+                                    {availableTopics.map((to) => (
                                       <CommandItem
-                                        key={framework.value}
-                                        value={framework.value}
+                                        key={to.value}
+                                        value={to.value}
                                         onSelect={(currentValue: string) => {
-                                          setTopic(
-                                            currentValue === topic
-                                              ? ""
-                                              : currentValue
-                                          );
+                                          handleApplicationTopic(currentValue);
                                           setOpenTopic(false);
                                         }}
                                       >
                                         <Check
                                           className={cn(
                                             "mr-2 h-4 w-4",
-                                            topic === framework.value
+                                            selectedTopic === to.value
                                               ? "opacity-100"
                                               : "opacity-0"
                                           )}
                                         />
-                                        {framework.label}
+                                        {to.label}
                                       </CommandItem>
                                     ))}
                                   </CommandGroup>
@@ -391,26 +514,39 @@ const Home = () => {
                       </>
                     )}
                   </div>
-                  <DialogFooter>
-                    <Button onClick={sendData} className="mt-3">
-                      Zapisz swój wybór
-                    </Button>
-                    
+
+                  {validationError && (
+                    <Alert variant="destructive">
+                      <AlertCircle className="h-4 w-4" />
+                      <AlertTitle>Błąd</AlertTitle>
+                      <AlertDescription>{validationError}</AlertDescription>
+                    </Alert>
+                  )}
+
+                  <DialogFooter className="justify-start md:justify-end mt-3">
+                    <DialogClose asChild>
+                      <Button variant="outline">Anuluj</Button>
+                    </DialogClose>
+                    <DialogClose asChild disabled={!canSaveChoice()}>
+                      <Button onClick={sendData} disabled={!canSaveChoice()}>
+                        Zapisz swój wybór
+                      </Button>
+                    </DialogClose>
                   </DialogFooter>
                 </DialogContent>
               </Dialog>
-
-              <Link href="peoplelist">
-                <Button
-                  size="lg"
-                  variant="secondary"
-                  className="py-8 md:py-0 text-base md:text-lg tracking-tight"
-                >
-                  Zobacz listę zapisanych studentów
-                </Button>
-              </Link>
             </div>
           )}
+
+          <Link href="peoplelist">
+            <Button
+              size="lg"
+              variant="secondary"
+              className="py-8 md:py-0 text-base md:text-lg tracking-tight min-w-[340px]"
+            >
+              Zobacz listę wyborów studentów
+            </Button>
+          </Link>
         </section>
         <Separator />
         <section className="pt-10">
@@ -517,7 +653,7 @@ const Home = () => {
             />
             <TopicCard
               icon={FileQuestion}
-              title="Zgadnij liczbę"
+              title="Sekretna liczba"
               link="/guessnumber"
               content="Aplikacja, to prosta gra polegająca na odgadnięciu sekretnej liczby. Gracz wybiera poziom trudności gry, a następnie próbuje odgadnąć liczbę losowo wygenerowaną przez komputer. W każdym poziomie trudności jest określona liczba prób ...
               "

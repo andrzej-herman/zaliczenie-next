@@ -12,9 +12,9 @@ export const TopicsLayout = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <div className="h-full dark:bg-[#1F1F1F] flex flex-col">
-      <div className="flex-1">
+      <div>
         <Navbar />
-        <main className="pt-40 pb-20 dark:bg-[#1F1F1F]">{children}</main>
+        <main className="pt-40 pb-20 dark:bg-[#1F1F1F] h-full">{children}</main>
         <Footer />
       </div>
     </div>

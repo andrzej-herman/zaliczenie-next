@@ -5,7 +5,6 @@ import { Landmark, Info, Play } from "lucide-react";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
