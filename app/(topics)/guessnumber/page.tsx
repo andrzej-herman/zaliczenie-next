@@ -5,7 +5,6 @@ import { Info, Play, FileQuestion } from "lucide-react";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -118,9 +117,9 @@ const BankPage = () => {
             <AlertTitle>UWAGA!</AlertTitle>
             <AlertDescription className="tracking-tight">
               Jeżeli graczowi skończą się próby, aplikacja wyświetla komunikat o
-              tym fakcie i następuje koniec gry. Jeżeli gracz odgadnie sekretną
-              liczbę przed wykorzystaniem wszystkich prób, wyświelamy komunikat
-              i wygranej i kończymy grę.
+              tym fakcie, pokazujemy sekretną liczbę i następuje koniec gry.
+              Jeżeli gracz odgadnie sekretną liczbę przed wykorzystaniem
+              wszystkich prób, wyświelamy komunikat i wygranej i kończymy grę.
             </AlertDescription>
           </Alert>
         </section>
@@ -144,7 +143,7 @@ const BankPage = () => {
             </code>
             <br />
             <code>
-              var druga = new Random(10, 100); // losowa liczba z zakresu 10-999
+              var druga = new Random(10, 100); // losowa liczba z zakresu 10-99
             </code>
             <br />
             <code>
