@@ -1,1 +1,1 @@
-export const url = "https://symulatory.aherman.pl/"
+export const url = "https://symulatory.hermanapi.hostingasp.pl/";
